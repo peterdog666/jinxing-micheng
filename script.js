@@ -48,7 +48,7 @@ function closePuzzleOverlay(overlayId, stateKey) {
 const MAPS = {
     cityGate: {
         name: '古城入口',
-        image: 'assets/maps/city_gate.png',
+        image: 'https://raw.githubusercontent.com/peterdog666/jinxing-micheng/master/assets/maps/city_gate.png',
         imageObj: null,
         imageLoaded: false,
         playerStart: { x: 600, y: 600 },
@@ -56,7 +56,7 @@ const MAPS = {
     },
     bank: {
         name: '日升昌票号',
-        image: 'assets/maps/bank.png',
+        image: 'https://raw.githubusercontent.com/peterdog666/jinxing-micheng/master/assets/maps/bank.png',
         imageObj: null,
         imageLoaded: false,
         playerStart: { x: 600, y: 600 },
@@ -64,7 +64,7 @@ const MAPS = {
     },
     escortAgency: {
         name: '镖局旧址',
-        image: 'assets/maps/escort_agency.png',
+        image: 'https://raw.githubusercontent.com/peterdog666/jinxing-micheng/master/assets/maps/escort_agency.png',
         imageObj: null,
         imageLoaded: false,
         playerStart: { x: 600, y: 600 },
@@ -72,7 +72,7 @@ const MAPS = {
     },
     noodleShop: {
         name: '老街面馆',
-        image: 'assets/maps/noodle_shop.png',
+        image: 'https://raw.githubusercontent.com/peterdog666/jinxing-micheng/master/assets/maps/noodle_shop.png',
         imageObj: null,
         imageLoaded: false,
         playerStart: { x: 600, y: 600 },
@@ -80,7 +80,7 @@ const MAPS = {
     },
     courtyard: {
         name: '古宅院落',
-        image: 'assets/maps/courtyard.png',
+        image: 'https://raw.githubusercontent.com/peterdog666/jinxing-micheng/master/assets/maps/courtyard.png',
         imageObj: null,
         imageLoaded: false,
         playerStart: { x: 600, y: 600 },
