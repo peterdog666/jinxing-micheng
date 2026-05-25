@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>晋行谜城 - 平遥古城 Citywalk 文化解谜之旅</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- 游戏主容器 -->
+    <div id="game-container">
+        <!-- 开始界面 -->
+        <div id="start-screen" class="screen active">
+            <div class="start-content">
+                <div class="title-decoration">🏮</div>
+                <h1 class="game-title">晋行谜城</h1>
+                <p class="subtitle">平遥古城 Citywalk 文化解谜之旅</p>
+                <div class="story-intro">
+                    <p>你是一名返乡大学生，回到山西平遥古城...</p>
+                    <p>在整理老屋时，你发现了一本残缺的旧账簿</p>
+                    <p>和一封未寄出的书信...</p>
+                    <p class="highlight">为了找回账簿背后的故事，</p>
+                    <p class="highlight">你需要在古城中展开一段文化探索之旅。</p>
+                </div>
+                <div class="controls-hint">
+                    <p>🎮 游戏操作：方向键/WASD 移动角色，E 键交互</p>
+                </div>
+                <button id="start-btn" class="btn-primary">开始探索</button>
+            </div>
+        </div>
+
+        <!-- 场景选择界面 -->
+        <div id="map-select-screen" class="screen">
+            <div class="map-select-content">
+                <h2>🗺️ 选择探索地点</h2>
+                <p class="hint">点击地点进入对应场景，收集古城记忆碎片</p>
+                
+                <div class="map-select-grid">
+                    <!-- 古城入口 -->
+                    <div class="map-select-card" data-scene="cityGate">
+                        <div class="map-card-icon">🏛️</div>
+                        <h3>古城入口</h3>
+                        <p>平遥古城迎薰门</p>
+                        <span class="map-card-status" id="status-cityGate">未探索</span>
+                    </div>
+
+                    <!-- 日升昌票号 -->
+                    <div class="map-select-card" data-scene="bank">
+                        <div class="map-card-icon">🏦</div>
+                        <h3>日升昌票号</h3>
+                        <p>中国第一家票号</p>
+                        <span class="map-card-status" id="status-bank">未探索</span>
+                    </div>
+
+                    <!-- 镖局旧址 -->
+                    <div class="map-select-card" data-scene="escortAgency">
+                        <div class="map-card-icon">⚔️</div>
+                        <h3>镖局旧址</h3>
+                        <p>同兴公镖局</p>
+                        <span class="map-card-status" id="status-escortAgency">未探索</span>
+                    </div>
+
+                    <!-- 老街面馆 -->
+                    <div class="map-select-card" data-scene="noodleShop">
+                        <div class="map-card-icon">🍜</div>
+                        <h3>老街面馆</h3>
+                        <p>平遥牛肉面馆</p>
+                        <span class="map-card-status" id="status-noodleShop">未探索</span>
+                    </div>
+
+                    <!-- 古宅院落 -->
+                    <div class="map-select-card" data-scene="courtyard">
+                        <div class="map-card-icon">🏘️</div>
+                        <h3>古宅院落</h3>
+                        <p>传统晋商民居</p>
+                        <span class="map-card-status" id="status-courtyard">未探索</span>
+                    </div>
+                </div>
+
+                <!-- 进度显示 -->
+                <div class="map-select-progress">
+                    <p>📜 古城记忆碎片：<span id="map-select-fragments">0</span>/5</p>
+                    <button id="map-select-ending" class="btn-primary" style="display: none;">查看结局</button>
+                </div>
+
+                <!-- 提示信息 -->
+                <div class="map-select-tip">
+                    <p>⚠️ 提示：首次进入场景可能会出现地图不显示的情况，建议退出后重新进入即可。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 游戏主界面（Canvas探索） -->
+        <div id="game-screen" class="screen">
+            <!-- 顶部状态栏 - 升级版 -->
+            <div class="game-hud">
+                <div class="hud-left">
+                    <button id="back-to-map" class="btn-back">← 返回地图</button>
+                    <span class="location-title" id="location-title">平遥古城</span>
+                </div>
+                <div class="hud-center">
+                    <button id="open-notebook" class="btn-secondary">📔 文化手账</button>
+                    <button id="open-tasks" class="btn-secondary">📋 任务</button>
+                    <button id="open-hints" class="btn-secondary">💡 提示</button>
+                </div>
+                <div class="hud-right">
+                    <div class="progress-display">
+                        <span>📜 记忆碎片：</span>
+                        <span id="hud-fragments">0/5</span>
+                    </div>
+                    <div class="investigation-display">
+                        <span>🔍 调查进度：</span>
+                        <span id="hud-investigation">0%</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Canvas 游戏画布 -->
+            <canvas id="game-canvas"></canvas>
+
+            <!-- 交互提示 -->
+            <div id="interact-prompt" class="interact-prompt" style="display: none;">
+                <p>按 <span class="key">E</span> 交互</p>
+            </div>
+
+            <!-- 对话框 -->
+            <div id="dialogue-box" class="dialogue-box-overlay" style="display: none;">
+                <div class="dialogue-content">
+                    <div class="dialogue-header">
+                        <span id="dialogue-npc-name">NPC</span>
+                    </div>
+                    <div class="dialogue-text" id="dialogue-text">
+                        NPC对话内容...
+                    </div>
+                    <button id="dialogue-next" class="btn-secondary">继续</button>
+                </div>
+            </div>
+
+            <!-- 谜题界面 - 文字输入题 -->
+            <div id="puzzle-overlay" class="puzzle-overlay" style="display: none;">
+                <div class="puzzle-content">
+                    <div class="puzzle-header">
+                        <h3>🧩 文化谜题</h3>
+                        <button class="puzzle-close-btn" onclick="closePuzzleOverlay('puzzle-overlay', 'isPuzzleActive')">✕</button>
+                    </div>
+                    <p class="puzzle-question" id="puzzle-question">谜题内容...</p>
+                    <div class="puzzle-input">
+                        <input type="text" id="puzzle-answer" placeholder="请输入你的答案...">
+                        <button id="submit-answer" class="btn-secondary">提交答案</button>
+                    </div>
+                    <p class="puzzle-hint" id="puzzle-hint"></p>
+                </div>
+            </div>
+
+            <!-- 谜题界面 - 选择题 -->
+            <div id="choice-puzzle-overlay" class="puzzle-overlay" style="display: none;">
+                <div class="puzzle-content">
+                    <div class="puzzle-header">
+                        <h3>🧩 文化谜题</h3>
+                        <button class="puzzle-close-btn" onclick="closePuzzleOverlay('choice-puzzle-overlay', 'isChoicePuzzleActive')">✕</button>
+                    </div>
+                    <p class="puzzle-question" id="choice-puzzle-question">谜题内容...</p>
+                    <div class="choice-options" id="choice-options">
+                        <!-- 动态生成选项 -->
+                    </div>
+                    <p class="puzzle-hint" id="choice-puzzle-hint"></p>
+                </div>
+            </div>
+
+            <!-- 谜题界面 - 密码输入题 -->
+            <div id="password-puzzle-overlay" class="puzzle-overlay" style="display: none;">
+                <div class="puzzle-content">
+                    <div class="puzzle-header">
+                        <h3>🧩 文化谜题</h3>
+                        <button class="puzzle-close-btn" onclick="closePuzzleOverlay('password-puzzle-overlay', 'isPasswordPuzzleActive')">✕</button>
+                    </div>
+                    <p class="puzzle-question" id="password-puzzle-question">谜题内容...</p>
+                    <div class="password-display" id="password-display">
+                        <span class="password-digit" data-index="0"></span>
+                        <span class="password-digit" data-index="1"></span>
+                        <span class="password-digit" data-index="2"></span>
+                    </div>
+                    <div class="password-input">
+                        <button class="password-btn" data-value="1">壹</button>
+                        <button class="password-btn" data-value="2">贰</button>
+                        <button class="password-btn" data-value="3">叁</button>
+                        <button class="password-btn" data-value="4">肆</button>
+                        <button class="password-btn" data-value="5">伍</button>
+                        <button class="password-clear" id="password-clear">清除</button>
+                        <button class="password-submit" id="password-submit">确认</button>
+                    </div>
+                    <p class="puzzle-hint" id="password-puzzle-hint"></p>
+                </div>
+            </div>
+
+            <!-- 最终推理界面 -->
+            <div id="final-puzzle-overlay" class="puzzle-overlay" style="display: none;">
+                <div class="puzzle-content final-puzzle-content">
+                    <h3>🏆 最终推理：拼合古城记忆</h3>
+                    <p class="puzzle-question">请从下方线索中选择4个关键线索，拼出真相：</p>
+                    <div class="clue-selection" id="clue-selection">
+                        <!-- 动态生成线索选项 -->
+                    </div>
+                    <div class="final-puzzle-actions">
+                        <button id="submit-final-puzzle" class="btn-primary">提交推理</button>
+                        <button id="cancel-final-puzzle" class="btn-secondary">取消</button>
+                    </div>
+                    <p class="puzzle-hint" id="final-puzzle-hint"></p>
+                </div>
+            </div>
+
+            <!-- 提示界面 -->
+            <div id="hint-overlay" class="puzzle-overlay" style="display: none;">
+                <div class="puzzle-content">
+                    <h3>💡 分层提示系统</h3>
+                    <p class="puzzle-question" id="hint-puzzle-question">当前场景提示：</p>
+                    <div class="hint-levels">
+                        <button class="hint-btn" data-level="1" id="hint-level-1">轻提示（免费）</button>
+                        <button class="hint-btn" data-level="2" id="hint-level-2">中提示（消耗1线索）</button>
+                        <button class="hint-btn" data-level="3" id="hint-level-3">强提示（消耗2线索）</button>
+                    </div>
+                    <div class="hint-display" id="hint-display">
+                        <p>点击上方按钮获取提示...</p>
+                    </div>
+                    <button id="hint-close" class="btn-secondary">关闭</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 文化手账界面 -->
+        <div id="notebook-screen" class="screen">
+            <div class="notebook-content">
+                <div class="notebook-header">
+                    <button id="close-notebook" class="btn-back">← 返回游戏</button>
+                    <h2>📔 文化手账</h2>
+                </div>
+                <div class="notebook-body">
+                    <div class="clues-list" id="clues-list">
+                        <p class="empty-hint">暂无线索，快去探索吧！</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 任务面板界面 -->
+        <div id="tasks-screen" class="screen">
+            <div class="tasks-content">
+                <div class="tasks-header">
+                    <button id="close-tasks" class="btn-back">← 返回游戏</button>
+                    <h2>📋 主线任务</h2>
+                </div>
+                <div class="tasks-body" id="tasks-body">
+                    <!-- 动态生成任务列表 -->
+                </div>
+            </div>
+        </div>
+
+        <!-- 结局界面 -->
+        <div id="ending-screen" class="screen">
+            <div class="ending-content">
+                <div class="ending-icon">🏆</div>
+                <h2>古城记忆图谱已点亮</h2>
+                <p class="ending-subtitle">你成功完成了平遥古城文化探索之旅</p>
+                
+                <div class="collected-fragments">
+                    <h3>📜 收集的古城记忆碎片</h3>
+                    <ul id="fragments-list">
+                        <!-- 动态生成碎片列表 -->
+                    </ul>
+                </div>
+
+                <div class="ending-evaluation">
+                    <h3>🎯 探索评价</h3>
+                    <div class="score-display">
+                        <div class="score-item">
+                            <span class="score-label">古城探索完成度</span>
+                            <div class="score-bar">
+                                <div class="score-fill" id="score-exploration"></div>
+                            </div>
+                            <span class="score-value" id="score-exploration-value">0%</span>
+                        </div>
+                        <div class="score-item">
+                            <span class="score-label">晋商记忆修复度</span>
+                            <div class="score-bar">
+                                <div class="score-fill" id="score-memory"></div>
+                            </div>
+                            <span class="score-value" id="score-memory-value">0%</span>
+                        </div>
+                        <div class="score-item">
+                            <span class="score-label">市井文化发现度</span>
+                            <div class="score-bar">
+                                <div class="score-fill" id="score-culture"></div>
+                            </div>
+                            <span class="score-value" id="score-culture-value">0%</span>
+                        </div>
+                        <div class="score-item">
+                            <span class="score-label">文化传承参与度</span>
+                            <div class="score-bar">
+                                <div class="score-fill" id="score-inheritance"></div>
+                            </div>
+                            <span class="score-value" id="score-inheritance-value">0%</span>
+                        </div>
+                    </div>
+                    <p id="evaluation-text" class="evaluation-text">评价内容...</p>
+                </div>
+
+                <div class="ending-actions">
+                    <button id="restart-btn" class="btn-primary">再次探索</button>
+                </div>
+
+                <div class="story-ending">
+                    <p>通过你的探索，账簿背后的故事终于完整了...</p>
+                    <p>原来这是一封祖父写给远方友人的信，</p>
+                    <p>讲述着平遥古城百年来的商贾传奇与人间烟火。</p>
+                    <p class="highlight">你决定将这些故事做成数字导览，</p>
+                    <p class="highlight">让更多人了解平遥，爱上平遥。</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

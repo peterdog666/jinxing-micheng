@@ -1,0 +1,1208 @@
+/* ========================================
+   晋行谜城 - 深度升级版样式
+   新增：分层提示系统、调查进度、多NPC、多物品交互
+   ======================================== */
+
+/* 全局样式 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Microsoft YaHei', 'SimHei', sans-serif;
+    background: linear-gradient(135deg, #2c1810 0%, #1a0f0a 100%);
+    color: #e8dcc8;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    overflow: hidden;
+}
+
+#game-container {
+    width: 100%;
+    max-width: 1200px;
+    height: 90vh;
+    max-height: 800px;
+    background: rgba(44, 24, 16, 0.95);
+    border-radius: 20px;
+    box-shadow: 0 0 50px rgba(139, 69, 19, 0.3),
+                inset 0 0 100px rgba(0, 0, 0, 0.5);
+    position: relative;
+    overflow: hidden;
+}
+
+/* 屏幕切换 */
+.screen {
+    display: none;
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.screen.active {
+    display: block;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* ========================================
+   开始界面样式
+   ======================================== */
+.start-content {
+    text-align: center;
+    padding-top: 40px;
+    padding-bottom: 40px;
+    overflow-y: auto;
+    max-height: 100%;
+}
+
+.title-decoration {
+    font-size: 48px;
+    margin-bottom: 10px;
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+.game-title {
+    font-size: 42px;
+    color: #d4a574;
+    text-shadow: 0 0 20px rgba(212, 165, 116, 0.5),
+                 2px 2px 4px rgba(0, 0, 0, 0.8);
+    letter-spacing: 10px;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.subtitle {
+    font-size: 16px;
+    color: #b8967a;
+    margin-bottom: 20px;
+    letter-spacing: 2px;
+}
+
+.story-intro {
+    background: rgba(0, 0, 0, 0.3);
+    border-left: 3px solid #d4a574;
+    padding: 15px 20px;
+    margin: 15px auto;
+    max-width: 600px;
+    text-align: left;
+    line-height: 1.6;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.controls-hint {
+    background: rgba(139, 69, 19, 0.2);
+    border: 1px solid #654321;
+    border-radius: 10px;
+    padding: 10px;
+    margin: 10px auto;
+    max-width: 500px;
+    font-size: 13px;
+    color: #b8967a;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #8b4513 0%, #a0522d 100%);
+    color: #e8dcc8;
+    border: 2px solid #d4a574;
+    padding: 12px 40px;
+    font-size: 16px;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: inherit;
+    letter-spacing: 2px;
+    margin-top: 15px;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #a0522d 0%, #8b4513 100%);
+    box-shadow: 0 0 30px rgba(212, 165, 116, 0.4);
+    transform: translateY(-2px);
+}
+
+.btn-secondary {
+    background: linear-gradient(135deg, #654321 0%, #8b4513 100%);
+    color: #e8dcc8;
+    border: 1px solid #d4a574;
+    padding: 12px 30px;
+    font-size: 16px;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: inherit;
+}
+
+.btn-secondary:hover {
+    background: linear-gradient(135deg, #8b4513 0%, #654321 100%);
+    box-shadow: 0 0 20px rgba(212, 165, 116, 0.3);
+}
+
+.btn-back {
+    background: rgba(0, 0, 0, 0.3);
+    color: #b8967a;
+    border: 1px solid #654321;
+    padding: 8px 20px;
+    font-size: 14px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: inherit;
+}
+
+.btn-back:hover {
+    background: rgba(139, 69, 19, 0.3);
+    color: #d4a574;
+}
+
+/* ========================================
+   场景选择界面样式
+   ======================================== */
+.map-select-content {
+    padding: 40px;
+    height: 100%;
+    overflow-y: auto;
+}
+
+.map-select-content h2 {
+    text-align: center;
+    font-size: 32px;
+    color: #d4a574;
+    margin-bottom: 10px;
+}
+
+.map-select-content .hint {
+    text-align: center;
+    color: #b8967a;
+    font-size: 14px;
+    margin-bottom: 30px;
+}
+
+.map-select-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.map-select-card {
+    background: rgba(0, 0, 0, 0.4);
+    border: 2px solid #654321;
+    border-radius: 15px;
+    padding: 25px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.map-select-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, transparent 0%, rgba(212, 165, 116, 0.1) 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.map-select-card:hover {
+    border-color: #d4a574;
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(139, 69, 19, 0.3);
+}
+
+.map-select-card:hover::before {
+    opacity: 1;
+}
+
+.map-select-card.explored {
+    border-color: #d4a574;
+    background: rgba(139, 69, 19, 0.2);
+}
+
+.map-card-icon {
+    font-size: 48px;
+    margin-bottom: 15px;
+}
+
+.map-select-card h3 {
+    font-size: 20px;
+    color: #d4a574;
+    margin-bottom: 10px;
+}
+
+.map-select-card p {
+    font-size: 14px;
+    color: #b8967a;
+    margin-bottom: 15px;
+}
+
+.map-card-status {
+    display: inline-block;
+    padding: 5px 15px;
+    border-radius: 15px;
+    font-size: 12px;
+    background: rgba(101, 67, 33, 0.5);
+    color: #b8967a;
+}
+
+.map-card-status.explored {
+    background: rgba(139, 69, 19, 0.5);
+    color: #d4a574;
+    border: 1px solid #d4a574;
+}
+
+.map-select-progress {
+    text-align: center;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 15px;
+    border: 2px solid #654321;
+}
+
+.map-select-progress p {
+    font-size: 18px;
+    color: #e8dcc8;
+    margin-bottom: 15px;
+}
+
+.map-select-progress span {
+    color: #d4a574;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+/* 场景选择提示 */
+.map-select-tip {
+    text-align: center;
+    padding: 15px 20px;
+    margin-top: 20px;
+    background: rgba(255, 193, 7, 0.1);
+    border: 2px solid #ffc107;
+    border-radius: 10px;
+    color: #ffc107;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.map-select-tip p {
+    margin: 0;
+}
+
+/* ========================================
+   游戏主界面样式 - 升级版
+   ======================================== */
+
+/* HUD 状态栏 - 升级版 */
+.game-hud {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background: rgba(0, 0, 0, 0.7);
+    border-bottom: 2px solid #654321;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    z-index: 100;
+    border-radius: 20px 20px 0 0;
+}
+
+.hud-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.location-title {
+    font-size: 20px;
+    color: #d4a574;
+    font-weight: bold;
+}
+
+.hud-center {
+    display: flex;
+    gap: 10px;
+}
+
+.hud-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.progress-display, .investigation-display {
+    font-size: 16px;
+    color: #e8dcc8;
+    background: rgba(139, 69, 19, 0.3);
+    padding: 8px 15px;
+    border-radius: 20px;
+    border: 1px solid #654321;
+}
+
+#hud-fragments, #hud-investigation {
+    color: #d4a574;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+/* Canvas 画布 */
+#game-canvas {
+    position: absolute;
+    top: 60px;
+    left: 0;
+    width: 100%;
+    height: calc(100% - 60px);
+    cursor: crosshair;
+}
+
+/* 交互提示 */
+.interact-prompt {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.8);
+    border: 2px solid #d4a574;
+    border-radius: 15px;
+    padding: 20px 40px;
+    z-index: 200;
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+.interact-prompt p {
+    font-size: 20px;
+    color: #e8dcc8;
+}
+
+.key {
+    display: inline-block;
+    background: linear-gradient(135deg, #8b4513 0%, #a0522d 100%);
+    color: #e8dcc8;
+    padding: 5px 15px;
+    border-radius: 8px;
+    font-weight: bold;
+    border: 2px solid #d4a574;
+    margin: 0 5px;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: translate(-50%, -50%) scale(1);
+    }
+    50% {
+        transform: translate(-50%, -50%) scale(1.05);
+    }
+}
+
+/* 对话框 */
+.dialogue-box-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.9);
+    border-top: 3px solid #d4a574;
+    padding: 30px;
+    z-index: 300;
+    border-radius: 0 0 20px 20px;
+}
+
+.dialogue-content {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.dialogue-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #654321;
+}
+
+#dialogue-npc-name {
+    font-size: 20px;
+    color: #d4a574;
+    font-weight: bold;
+}
+
+.dialogue-close-btn {
+    background: none;
+    border: none;
+    color: #b8967a;
+    font-size: 24px;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.dialogue-close-btn:hover {
+    color: #d4a574;
+}
+
+.dialogue-text {
+    font-size: 16px;
+    color: #c4b496;
+    line-height: 1.8;
+    margin-bottom: 20px;
+    min-height: 60px;
+}
+
+#dialogue-next {
+    float: right;
+}
+
+/* ========================================
+   谜题界面样式 - 通用
+   ======================================== */
+.puzzle-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(44, 24, 16, 0.95);
+    border: 3px solid #d4a574;
+    border-radius: 20px;
+    padding: 40px;
+    z-index: 400;
+    min-width: 500px;
+    box-shadow: 0 0 50px rgba(212, 165, 116, 0.5);
+}
+
+.puzzle-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #654321;
+}
+
+.puzzle-header h3 {
+    font-size: 24px;
+    color: #d4a574;
+    margin: 0;
+}
+
+.puzzle-close-btn {
+    background: none;
+    border: none;
+    color: #b8967a;
+    font-size: 24px;
+    cursor: pointer;
+    transition: color 0.3s ease;
+    padding: 5px 10px;
+    border-radius: 5px;
+    z-index: 10;
+    position: relative;
+    pointer-events: auto;
+}
+
+.puzzle-close-btn:hover {
+    color: #d4a574;
+    background: rgba(212, 165, 116, 0.1);
+}
+
+.puzzle-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #654321;
+    pointer-events: auto;
+}
+
+.puzzle-content h3 {
+    font-size: 24px;
+    color: #d4a574;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.puzzle-question {
+    font-size: 16px;
+    color: #e8dcc8;
+    line-height: 1.8;
+    margin-bottom: 25px;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    border-left: 3px solid #d4a574;
+}
+
+.puzzle-input {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.puzzle-input input {
+    flex: 1;
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid #654321;
+    color: #e8dcc8;
+    padding: 12px 20px;
+    border-radius: 25px;
+    font-size: 16px;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+.puzzle-input input:focus {
+    border-color: #d4a574;
+}
+
+.puzzle-input input::placeholder {
+    color: #8b7355;
+}
+
+.puzzle-hint {
+    color: #d4a574;
+    font-size: 14px;
+    min-height: 20px;
+    margin-top: 10px;
+    text-align: center;
+}
+
+/* ========================================
+   选择题谜题样式
+   ======================================== */
+.choice-options {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.choice-option {
+    background: rgba(0, 0, 0, 0.3);
+    border: 2px solid #654321;
+    border-radius: 10px;
+    padding: 15px 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: #e8dcc8;
+    font-size: 16px;
+    font-family: inherit;
+    text-align: left;
+}
+
+.choice-option:hover {
+    border-color: #d4a574;
+    background: rgba(139, 69, 19, 0.2);
+}
+
+.choice-option.selected {
+    border-color: #d4a574;
+    background: rgba(139, 69, 19, 0.3);
+}
+
+.choice-option.correct {
+    border-color: #90ee90;
+    background: rgba(144, 238, 144, 0.1);
+    color: #90ee90;
+}
+
+.choice-option.wrong {
+    border-color: #ff6b6b;
+    background: rgba(255, 107, 107, 0.1);
+    color: #ff6b6b;
+}
+
+/* ========================================
+   密码输入题样式
+   ======================================== */
+.password-display {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin: 30px 0;
+}
+
+.password-digit {
+    width: 60px;
+    height: 60px;
+    border: 3px solid #d4a574;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    color: #e8dcc8;
+    background: rgba(0, 0, 0, 0.3);
+}
+
+.password-digit.filled {
+    background: rgba(139, 69, 19, 0.3);
+    color: #d4a574;
+}
+
+.password-input {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    max-width: 300px;
+    margin: 0 auto;
+}
+
+.password-btn {
+    background: linear-gradient(135deg, #654321 0%, #8b4513 100%);
+    color: #e8dcc8;
+    border: 1px solid #d4a574;
+    padding: 15px;
+    font-size: 18px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: inherit;
+}
+
+.password-btn:hover {
+    background: linear-gradient(135deg, #8b4513 0%, #654321 100%);
+    box-shadow: 0 0 10px rgba(212, 165, 116, 0.3);
+}
+
+.password-clear,
+.password-submit {
+    grid-column: span 2;
+    background: linear-gradient(135deg, #8b4513 0%, #a0522d 100%);
+    color: #e8dcc8;
+    border: 2px solid #d4a574;
+    padding: 15px;
+    font-size: 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: inherit;
+}
+
+.password-clear:hover,
+.password-submit:hover {
+    background: linear-gradient(135deg, #a0522d 0%, #8b4513 100%);
+    box-shadow: 0 0 20px rgba(212, 165, 116, 0.4);
+}
+
+/* ========================================
+   最终推理界面样式
+   ======================================== */
+.final-puzzle-content {
+    max-width: 600px;
+}
+
+.clue-selection {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    margin: 20px 0;
+}
+
+.clue-option {
+    background: rgba(0, 0, 0, 0.3);
+    border: 2px solid #654321;
+    border-radius: 10px;
+    padding: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: #e8dcc8;
+    font-size: 14px;
+    text-align: center;
+}
+
+.clue-option:hover {
+    border-color: #d4a574;
+    background: rgba(139, 69, 19, 0.2);
+}
+
+.clue-option.selected {
+    border-color: #d4a574;
+    background: rgba(139, 69, 19, 0.3);
+    box-shadow: 0 0 10px rgba(212, 165, 116, 0.3);
+}
+
+.clue-option .clue-icon {
+    font-size: 32px;
+    margin-bottom: 10px;
+}
+
+.clue-option .clue-name {
+    font-weight: bold;
+    color: #d4a574;
+    margin-bottom: 5px;
+}
+
+.clue-option .clue-desc {
+    font-size: 12px;
+    color: #b8967a;
+}
+
+.final-puzzle-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+/* ========================================
+   提示界面样式 - 新增
+   ======================================== */
+.hint-levels {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin: 20px 0;
+}
+
+.hint-btn {
+    background: rgba(0, 0, 0, 0.3);
+    border: 2px solid #654321;
+    border-radius: 10px;
+    padding: 15px 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: #e8dcc8;
+    font-size: 16px;
+    font-family: inherit;
+    text-align: left;
+}
+
+.hint-btn:hover {
+    border-color: #d4a574;
+    background: rgba(139, 69, 19, 0.2);
+}
+
+.hint-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.hint-display {
+    background: rgba(0, 0, 0, 0.3);
+    border: 2px solid #8b4513;
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: 20px;
+    min-height: 60px;
+}
+
+.hint-display p {
+    font-size: 16px;
+    color: #c4b496;
+    line-height: 1.8;
+}
+
+/* ========================================
+   文化手账界面样式
+   ======================================== */
+.notebook-content {
+    padding: 40px;
+    height: 100%;
+    overflow-y: auto;
+}
+
+.notebook-header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #654321;
+}
+
+.notebook-header h2 {
+    font-size: 32px;
+    color: #d4a574;
+}
+
+.notebook-body {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.clues-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.clue-item {
+    background: rgba(0, 0, 0, 0.3);
+    border: 2px solid #8b4513;
+    border-radius: 15px;
+    padding: 20px;
+    border-left: 3px solid #d4a574;
+}
+
+.clue-item.key-clue {
+    border-left: 3px solid #90ee90;
+}
+
+.clue-item.distraction-clue {
+    border-left: 3px solid #ff6b6b;
+    opacity: 0.8;
+}
+
+.clue-item .clue-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 10px;
+}
+
+.clue-item .clue-icon {
+    font-size: 32px;
+}
+
+.clue-item .clue-name {
+    font-size: 18px;
+    color: #d4a574;
+    font-weight: bold;
+}
+
+.clue-item .clue-type {
+    font-size: 12px;
+    padding: 3px 10px;
+    border-radius: 10px;
+    margin-left: auto;
+}
+
+.clue-item.key-clue .clue-type {
+    background: rgba(144, 238, 144, 0.2);
+    color: #90ee90;
+    border: 1px solid #90ee90;
+}
+
+.clue-item .clue-source {
+    font-size: 12px;
+    color: #b8967a;
+    margin-left: 10px;
+}
+
+.clue-item .clue-description {
+    font-size: 14px;
+    color: #c4b496;
+    line-height: 1.6;
+}
+
+.empty-hint {
+    text-align: center;
+    color: #b8967a;
+    font-size: 16px;
+    padding: 40px;
+}
+
+/* ========================================
+   任务面板界面样式
+   ======================================== */
+.tasks-content {
+    padding: 40px;
+    height: 100%;
+    overflow-y: auto;
+}
+
+.tasks-header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #654321;
+}
+
+.tasks-header h2 {
+    font-size: 32px;
+    color: #d4a574;
+}
+
+.tasks-body {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.task-item {
+    background: rgba(0, 0, 0, 0.3);
+    border: 2px solid #654321;
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 15px;
+    transition: all 0.3s ease;
+}
+
+.task-item.active {
+    border-color: #d4a574;
+    background: rgba(139, 69, 19, 0.2);
+}
+
+.task-item.completed {
+    border-color: #90ee90;
+    background: rgba(144, 238, 144, 0.1);
+}
+
+.task-item .task-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 10px;
+}
+
+.task-item .task-status {
+    font-size: 20px;
+}
+
+.task-item .task-title {
+    font-size: 18px;
+    color: #d4a574;
+    font-weight: bold;
+}
+
+.task-item .task-description {
+    font-size: 14px;
+    color: #c4b496;
+    line-height: 1.6;
+    padding-left: 35px;
+}
+
+.task-item .task-progress {
+    font-size: 12px;
+    color: #b8967a;
+    margin-top: 10px;
+    padding-left: 35px;
+}
+
+/* ========================================
+   结局界面样式
+   ======================================== */
+.ending-content {
+    text-align: center;
+    padding-top: 50px;
+    max-width: 700px;
+    margin: 0 auto;
+    overflow-y: auto;
+    height: 100%;
+}
+
+.ending-icon {
+    font-size: 80px;
+    margin-bottom: 30px;
+    animation: float 3s ease-in-out infinite;
+}
+
+.ending-content h2 {
+    font-size: 36px;
+    color: #d4a574;
+    margin-bottom: 15px;
+}
+
+.ending-subtitle {
+    font-size: 18px;
+    color: #b8967a;
+    margin-bottom: 40px;
+}
+
+/* 收集的碎片 */
+.collected-fragments {
+    background: rgba(0, 0, 0, 0.3);
+    border: 2px solid #8b4513;
+    border-radius: 15px;
+    padding: 25px;
+    margin-bottom: 30px;
+    text-align: left;
+}
+
+.collected-fragments h3 {
+    color: #d4a574;
+    font-size: 20px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.collected-fragments ul {
+    list-style: none;
+    padding: 0;
+}
+
+.collected-fragments li {
+    padding: 12px 20px;
+    margin-bottom: 10px;
+    background: rgba(139, 69, 19, 0.2);
+    border-radius: 10px;
+    border-left: 3px solid #d4a574;
+    color: #c4b496;
+    line-height: 1.6;
+}
+
+/* 评分系统 */
+.ending-evaluation {
+    background: rgba(0, 0, 0, 0.3);
+    border: 2px solid #654321;
+    border-radius: 15px;
+    padding: 25px;
+    margin-bottom: 30px;
+}
+
+.ending-evaluation h3 {
+    color: #d4a574;
+    font-size: 20px;
+    margin-bottom: 20px;
+}
+
+.score-display {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.score-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.score-label {
+    width: 150px;
+    text-align: left;
+    font-size: 14px;
+    color: #c4b496;
+}
+
+.score-bar {
+    flex: 1;
+    height: 20px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid #654321;
+}
+
+.score-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #8b4513 0%, #d4a574 100%);
+    border-radius: 10px;
+    transition: width 1s ease;
+    width: 0%;
+}
+
+.score-value {
+    font-size: 14px;
+    color: #d4a574;
+    font-weight: bold;
+    min-width: 40px;
+    text-align: right;
+}
+
+.evaluation-text {
+    font-size: 16px;
+    color: #c4b496;
+    line-height: 1.8;
+    margin-top: 20px;
+}
+
+/* 结局操作 */
+.ending-actions {
+    margin: 30px 0;
+}
+
+/* 结局故事 */
+.story-ending {
+    background: rgba(0, 0, 0, 0.3);
+    border-left: 3px solid #d4a574;
+    padding: 20px 30px;
+    margin-top: 40px;
+    text-align: left;
+    line-height: 1.8;
+    border-radius: 5px;
+}
+
+.story-ending p {
+    margin-bottom: 10px;
+    color: #c4b496;
+}
+
+.story-ending .highlight {
+    color: #d4a574;
+    font-weight: bold;
+}
+
+/* ========================================
+   响应式设计
+   ======================================== */
+@media (max-width: 768px) {
+    .game-title {
+        font-size: 42px;
+        letter-spacing: 10px;
+    }
+
+    .subtitle {
+        font-size: 16px;
+    }
+
+    .puzzle-overlay {
+        min-width: 90%;
+        padding: 30px 20px;
+    }
+
+    .game-hud {
+        padding: 0 10px;
+        flex-wrap: wrap;
+        height: auto;
+        padding: 10px;
+    }
+
+    .hud-center {
+        order: 3;
+        width: 100%;
+        justify-content: center;
+    }
+
+    .location-title {
+        font-size: 16px;
+    }
+
+    .progress-display, .investigation-display {
+        font-size: 14px;
+        padding: 6px 12px;
+    }
+
+    .map-select-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .clue-selection {
+        grid-template-columns: 1fr;
+    }
+
+    .password-input {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
